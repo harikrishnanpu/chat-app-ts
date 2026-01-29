@@ -14,6 +14,7 @@ function Register() {
             htmlFor="name"
             className="block mb-2.5 text-sm font-medium text-heading"
           >
+            
             Your Name
           </label>
           <input
