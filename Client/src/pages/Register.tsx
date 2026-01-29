@@ -1,10 +1,14 @@
+import { useRegister } from "../hooks/useRegister";
+
 function Register() {
 
+
+  const { register, handleSubmit, submitHandler } = useRegister();
 
   
   return (
     <div>
-      <form className="max-w-sm mx-auto">
+      <form onSubmit={handleSubmit(submitHandler)} className="max-w-sm mx-auto">
         <div className="mb-5">
           <label
             htmlFor="name"
@@ -13,11 +17,11 @@ function Register() {
             Your Name
           </label>
           <input
+            {...register("name")}
             type="text"
             id="name"
             className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
             placeholder="enter your name"
-            required
           />
         </div>
 
@@ -29,11 +33,11 @@ function Register() {
             Your email
           </label>
           <input
+            {...register("email")}
             type="email"
             id="email"
             className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
             placeholder="name@email.com"
-            required
           />
         </div>
         <div className="mb-5">
