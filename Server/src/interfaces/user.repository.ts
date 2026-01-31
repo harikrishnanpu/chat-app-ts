@@ -1,7 +1,7 @@
 import type { IUser } from '../interfaces/user.model.js';
 
 export interface IUserRepository { 
-    createUser(user: IUser):{};
+    createUser(user: Partial<IUser>):{};
     findByEmail(email: string):{ };
     findById(id: string): { };
     updateUser(id: string, user: Partial<IUser>): { };

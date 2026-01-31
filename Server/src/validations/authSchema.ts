@@ -14,8 +14,9 @@ export const otpSchema = z.object({
   })
 })
 
-export const emailSchema = z.object({
+export const loginSchema = z.object({
   body : z.object({
-    email: z.string().email("Invalid email !")
+    email: z.string().email("Invalid email !"),
+     password: z.string().min(5, "Password must be 6 characters !"),
   })
 })

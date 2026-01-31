@@ -1,80 +1,60 @@
 import { success } from "zod";
 import bcrypt from "bcryptjs"
-import { findIfUserExistService, otpVerifyService, saveUserToDBService, sendOtpService, } from "../services/UserAuthServices/register.services.js";
+
+import { UserMongoRepository } from "../repository/user.repository.js";
+import type { Request,Response } from "express";
+import {JwtTokenService} from "../services/token.js"
+import {PasswordService} from "../services/UserAuthServices/PasswordHash.js"
 
 
-export const registerController = async (req, res) => {
+const userMongoRepository = new UserMongoRepository();
+const jwtTokenService = new JwtTokenService()
+const passwordService = new PasswordService()
+
+export const registerController = async (req:Request, res:Response) => {
     const { name, email, password } = req.body
 
-    try {
+    const existUser = await userMongoRepository.findByEmail(email);
 
-        let user = await findIfUserExistService(email)
+    if(existUser) throw new Error("user with email already exists");
 
-        if (user.success) {
-            throw new Error(user.message);
-        }
+    const hashedPasswod = await passwordService.hash(password)
+    const user =await userMongoRepository.createUser({name : name as string,email:email as string ,password: hashedPasswod as string});
 
-        const hashPassword = await bcrypt.hash(password, 10)
+    const token =await jwtTokenService.generateToken({email,userId:user._id!})
 
-        let save = await saveUserToDBService(name, email, hashPassword)
+     res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
 
-        if (save.success == false) {
-            throw new Error(save.message);
-        }
+    return res.status(200).json({success:true,message:"user created succesfully"})
 
-        let otpReply = await sendOtpService(email)
-
-        if (otpReply.success == false) {
-            throw new Error(otpReply.message);
-        }
-
-        return res.status(200).json({ success: true, message: "Otp send to email" })
-
-    } catch (error) {
-        res.json({ success: false, message: error.message })
-    }
+    
 }
 
 
-export const otpVerify = async (req, res) => {
-    const { otp } = req.body
+export const loginController = async (req:Request, res:Response) => {
+    const { email, password } = req.body
 
-    try {
-        const otpCheck = await otpVerifyService(otp)
+    const existUser = await userMongoRepository.findByEmail(email);
 
-        if (otpCheck.success == false) {
-            throw new Error(otpCheck.message);
-        }
+      if(!existUser) throw new Error("No user is found")
 
-        console.log(req.body)
+    const comparePassword = await passwordService.compare(password,existUser?.password as string);
 
-        res.status(200).json({ success: true, message: "Otp verified successfully" })
+    if(!comparePassword) throw new Error("Invalid password");
+  
+    const token =await jwtTokenService.generateToken({email,userId:existUser._id as string});
 
-    } catch (error) {
-        res.json({ success: false, message: error })
-    }
-}
+     res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
 
-export const resendOtp = async (req, res) => {
-    const { email } = req.body
+    return res.status(200).json({success:true,message:"User logined successfully",user:{name:existUser.name}})
 
-    try {
-
-        let user = await findIfUserExistService(email)
-
-        if (user.success == false) {
-            throw new Error(user.message);
-        }
-
-        let otpReply = await sendOtpService(email)
-
-        if (otpReply.success == false) {
-            throw new Error(otpReply.message);
-        }
-
-        return res.status(200).json({ success: true, message: "Resend otp send to email" })
-
-    } catch (error) {
-        res.json({ success: false, message: error.message })
-    }
+    
 }

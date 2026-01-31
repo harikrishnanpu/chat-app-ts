@@ -1,0 +1,31 @@
+import { Server } from "socket.io";
+
+let io: Server | null = null;
+
+export const initSocket = (httpServer: any) => {
+  io = new Server(httpServer, {
+    cors: { origin: "*" },
+  });
+
+  io.on("connection", (socket) => {
+    console.log("Socket connected:", socket.id);
+
+    socket.on("join-user", (userId: string) => {
+      console.log("The user has been joined");
+      socket.join(`user:${userId}`);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Socket disconnected:", socket.id);
+    });
+  });
+
+  return io;
+};
+
+export function getIO(): Server {
+  if (!io) {
+    throw new Error("Socket.io not initialized");
+  }
+  return io;
+}

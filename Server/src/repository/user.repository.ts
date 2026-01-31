@@ -5,7 +5,7 @@ import UserModel from "../models/userModel.js";
 
 
 export class UserMongoRepository implements IUserRepository {
-  async createUser(user: IUser): Promise<IUser> {
+  async createUser(user: Partial<IUser>): Promise<IUser> {
     return await UserModel.create(user);
   }
 
@@ -26,3 +26,4 @@ export class UserMongoRepository implements IUserRepository {
     }
     
 }
+
