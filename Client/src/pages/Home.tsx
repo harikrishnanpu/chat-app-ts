@@ -15,7 +15,7 @@ function Home() {
             navigate('/login');
             return;
         }
-        
+         
     }, [isAuthenticated, user, navigate]);
 
   return (
