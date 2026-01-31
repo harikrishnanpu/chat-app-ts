@@ -4,14 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { registerService } from "../services/auth.services";
-import { useDispatch } from "react-redux";
 import { login } from "../redux/Slices/authSlice";
+import { useAppDispatch } from "../redux/store";
 
 
 export const useRegister = () => {
 
     const navigate = useNavigate(); 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const { register, handleSubmit, formState: { errors } } = useForm<RegisterSchema>({
         mode: "onBlur",
@@ -33,7 +33,7 @@ export const useRegister = () => {
             dispatch(login({ user: response.data.user }));
             
             toast.success("Registration successful! You can now log in.");
-            navigate('/home')
+            navigate('/user/home')
 
         } catch (err) {
             toast.error("Registration failed. Please try again.");

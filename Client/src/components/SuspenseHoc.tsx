@@ -10,4 +10,4 @@ function SuspenseHoc({ children}: {children: React.ReactNode}) {
   )
 }
 
-export default SuspenseHoc
+export default SuspenseHoc;

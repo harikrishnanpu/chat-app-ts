@@ -3,15 +3,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { loginService } from "../services/auth.services";
-import { useDispatch } from "react-redux";
 import { login } from "../redux/Slices/authSlice";
 import { loginSchema, type loginData } from "../schema/login-schema";
+import { useAppDispatch } from "../redux/store";
 
 
 export const useLogin = () => {
 
     const navigate = useNavigate(); 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const { register, handleSubmit, formState: { errors } } = useForm<loginData>({
         mode: "onBlur",
@@ -30,7 +30,7 @@ export const useLogin = () => {
             dispatch(login({ user: response.data.user }));
             
             toast.success("Login successful!");
-            navigate('/home')
+            navigate('/user/home')
 
         } catch (err) {
             toast.error((err as any).response.data.message);

@@ -1,0 +1,24 @@
+import { Outlet, useNavigate } from "react-router";
+import { useAppSelector, type RootState } from "../redux/store"
+
+
+
+
+function AuthGuard() {
+
+    const navigate = useNavigate();
+    const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
+
+    if (!isAuthenticated) {
+        navigate('/login');
+        return;
+    }
+
+  return (
+      <>
+          <Outlet />
+    </>
+  )
+}
+
+export default AuthGuard;

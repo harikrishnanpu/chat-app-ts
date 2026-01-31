@@ -19,3 +19,7 @@ export const loginService = async (data: { email: string; password: string }) =>
         password: data.password
     });
 }
+
+export const getUser = async () => { 
+    return await api.get('/auth/user');
+}

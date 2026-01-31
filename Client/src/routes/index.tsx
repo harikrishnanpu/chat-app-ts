@@ -1,14 +1,11 @@
 import { createBrowserRouter } from "react-router";
 import Layout from "../layouts/index.tsx";
 import Landing from "../pages/Landing.tsx";
-import { lazy } from "react";
-import SuspenseHoc from "../components/SuspenseHoc.tsx";
+import { authRoutes } from "./auths/auth.routes.tsx";
+import { userRoutes } from "./user/user.routes.tsx";
 
 
 
-const RegisterPage = lazy(() => import("../pages/Register.tsx"));
-const HomePage = lazy(() => import("../pages/Home.tsx"));
-const LoginPage = lazy(() => import("../pages/Login.tsx"));
 
 const router = createBrowserRouter([
     {
@@ -19,25 +16,10 @@ const router = createBrowserRouter([
                 index: true, 
                 element: <Landing />,
             },
-            {
-                path: "register",
-                element: <SuspenseHoc>
-                    <RegisterPage />
-                </SuspenseHoc>,
-            },
-            {
-                path: "login",
-                element: <SuspenseHoc>
-                    <LoginPage />
-                </SuspenseHoc>,
-            },
-            {
-                path: "home",
-                element: <SuspenseHoc>
-                    <HomePage />
-                </SuspenseHoc>,
-            }
-        ]
+            ...authRoutes,
+            ...userRoutes
+        ],
+        errorElement: <div className="min-w-screen text-center">404 Not Found</div>
     }
 ])
 
