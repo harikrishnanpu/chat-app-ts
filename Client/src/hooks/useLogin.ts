@@ -1,42 +1,39 @@
 import { useForm } from "react-hook-form"
-import { registerSchema, type RegisterSchema } from "../schema/register-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
-import { registerService } from "../services/auth.services";
+import { loginService } from "../services/auth.services";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/Slices/authSlice";
+import { loginSchema, type loginData } from "../schema/login-schema";
 
 
-export const useRegister = () => {
+export const useLogin = () => {
 
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<RegisterSchema>({
+    const { register, handleSubmit, formState: { errors } } = useForm<loginData>({
         mode: "onBlur",
-        resolver: zodResolver(registerSchema),
+        resolver: zodResolver(loginSchema),
         defaultValues: {
-            name: "",
             email: "",
             password: "",
-            terms: true,
         }
     });
 
-    const submitHandler = async (data: RegisterSchema) => { 
+    const submitHandler = async (data: loginData) => { 
 
         try {
 
-
-            const response = await registerService(data);
+            const response = await loginService(data);
             dispatch(login({ user: response.data.user }));
             
-            toast.success("Registration successful! You can now log in.");
+            toast.success("Login successful!");
             navigate('/home')
 
         } catch (err) {
-            toast.error("Registration failed. Please try again.");
+            toast.error((err as any).response.data.message);
             console.log(err);
             return;
          }

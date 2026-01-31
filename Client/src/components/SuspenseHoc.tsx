@@ -4,7 +4,7 @@ import { Suspense } from "react"
 
 function SuspenseHoc({ children}: {children: React.ReactNode}) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div className="min-w-screen text-center">Loading...</div>}>
       {children}
     </Suspense>
   )

@@ -6,7 +6,9 @@ import SuspenseHoc from "../components/SuspenseHoc.tsx";
 
 
 
-const RegisterPage =  lazy(()=> import("../pages/Register.tsx"))
+const RegisterPage = lazy(() => import("../pages/Register.tsx"));
+const HomePage = lazy(() => import("../pages/Home.tsx"));
+const LoginPage = lazy(() => import("../pages/Login.tsx"));
 
 const router = createBrowserRouter([
     {
@@ -21,6 +23,18 @@ const router = createBrowserRouter([
                 path: "register",
                 element: <SuspenseHoc>
                     <RegisterPage />
+                </SuspenseHoc>,
+            },
+            {
+                path: "login",
+                element: <SuspenseHoc>
+                    <LoginPage />
+                </SuspenseHoc>,
+            },
+            {
+                path: "home",
+                element: <SuspenseHoc>
+                    <HomePage />
                 </SuspenseHoc>,
             }
         ]
