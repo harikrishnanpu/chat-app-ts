@@ -1,6 +1,8 @@
 import type { Request, Response } from 'express';
 import express from 'express';
 import authRouter from './routes/authRoutes.js';
+import conversionRoutes from './routes/conversation.routes.js';
+import messageRouter from './routes/message.routes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import cors from 'cors';
 import dotenv from "dotenv"
@@ -10,7 +12,7 @@ import {connectDB} from "./config/mongoose.connect.js"
 const app = express();
 const PORT = process.env.PORT || 2500;
 import { initSocket } from "./socket.js";
-
+import cookieParser from 'cookie-parser';
 
 
 app.use(
@@ -25,6 +27,7 @@ app.use(
 connectDB()
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use((req, res, next) => {
   console.log("---- Incoming Request ----");
@@ -38,6 +41,8 @@ app.use((req, res, next) => {
 
 
 app.use("/api/v1/auth" , authRouter)
+app.use("/api/v1/conversion",conversionRoutes)
+app.use("/api/v1/messages",messageRouter)
 
 
 app.use(errorHandler);

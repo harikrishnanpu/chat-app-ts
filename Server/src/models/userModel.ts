@@ -15,7 +15,7 @@ const userSchema = new Schema<IUser>(
 
     password: { type: String, required: true },
 
-    is_online: { type: Boolean, default: false },
+    isOnline: { type: Boolean, default: false },
     is_blocked: { type: Boolean, default: false },
     last_seen: { type: Date, default: Date.now },
         block_count: { type: Number, default: 0 },

@@ -58,3 +58,18 @@ export const loginController = async (req:Request, res:Response) => {
 
     
 }
+
+export const getUserDetails = async (req:Request, res:Response) => {
+    const { userId } = req.user
+
+    const existUser = await userMongoRepository.findById(userId);
+
+    if(!existUser) throw new Error("no user found")
+
+  
+    return res.status(200).json({success:true,message:"User logined successfully",user:{...existUser}})
+
+    
+}
+
+

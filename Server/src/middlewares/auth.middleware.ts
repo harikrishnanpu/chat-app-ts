@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
+import { JwtTokenService } from "../services/token.js";
 
 
 const jwtService = new JwtTokenService();
@@ -9,7 +10,7 @@ export const authMiddleware = (
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies?.access_token;
+    const token = req.cookies?.token;
 
     if (!token) {
       return res.status(401).json({

@@ -1,3 +1,4 @@
+import type { JwtPayload } from "../services/token.ts";
 
 
 declare global {
